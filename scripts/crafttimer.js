@@ -74,7 +74,8 @@ ELEMENT["ice+strong"] = "Fire";
 ELEMENT["ice+same"] = "Ice";
 ELEMENT["lightning+strong"] = "Earth";
 ELEMENT["lightning+same"] = "Lightning";
-ELEMENT["light+strong"] = "North";
+ELEMENT["light+strong"] = "Dark";
+//ELEMENT["light+strong"] = "North";
 ELEMENT["light+same"] = "Light";
 ELEMENT["dark+strong"] = "Light";
 ELEMENT["dark+same"] = "Dark";
@@ -108,6 +109,12 @@ DAY_CRYSTAL_FACTOR["dark+water"] = -1;
 DAY_CRYSTAL_FACTOR["dark+wind"] = -1;
 DAY_CRYSTAL_FACTOR["dark+ice"] = -1;
 DAY_CRYSTAL_FACTOR["dark+lightning"] = -1;
+DAY_CRYSTAL_FACTOR["lightning+earth"]= 1;
+DAY_CRYSTAL_FACTOR["fire+water"]=1;
+DAY_CRYSTAL_FACTOR["earth+wind"]=1;
+DAY_CRYSTAL_FACTOR["water+lightning"]=1;
+DAY_CRYSTAL_FACTOR["wind+ice"]=1;
+DAY_CRYSTAL_FACTOR["ice+fire"]=1;
 
 DAY_INDEX_FACTOR = new Object();
 DAY_INDEX_FACTOR["0"] = "fire";
@@ -900,20 +907,60 @@ chance=.3;
 chance=.5;
         break;
 }
+ //   console.log(daytype);
+  //  console.log(ELEMENT[convertElementDaytoElement(daytype)+"+strong"]);
+   // console.log("strong element for day "+ ELEMENT[convertElementDaytoElement(daytype)+"+strong"]+ " crystal type="+titleCase(crystaltype));
+   // console.log(dayTypeToLowerCaseWithoutEndingInsDays(daytype));
+   // console.log("crystal+strong" + ELEMENT[crystaltype+"+strong"]) + "   " + dayTypeToLowerCaseWithoutEndingInsDays(daytype);
     chance *= 1.0 - (moonpercent - 50)/150;
     if (convertCrystalNameFormat(crystaltype) == daytype)
     { chance *= 1.0 - (.33);}
     else if (ELEMENT[crystaltype+"+strong"] == dayTypeToLowerCaseWithoutEndingInsDays(daytype))
     {  chance *= 1.0 + (.33);}
-    else if (ELEMENT[daytype+"+strong"] == titleCase(crystaltype))
+    else if (ELEMENT[convertElementDaytoElement(daytype)+"+strong"] == titleCase(crystaltype))
     {   chance *= 1.0 - (.33);}
     else if (daytype == "Lightsday")
     {    chance *= 1.0 - (.33);}
     else if (daytype == "Darksday")
     { chance *= 1.0 + (.33);}
     //tier taken care of
-return 'hq('+ (chance * 100).toFixed(2) + '%' +')';
+    if(((chance * 100).toFixed(2))>50)
+    {
+        return 'hq(50%' +')';
+    }else{
+        return 'hq('+ (chance * 100).toFixed(2) + '%' +')';
+    }
 
+
+}
+
+function convertElementDaytoElement(elementday){
+    switch(elementday) {
+        case "Lightsday":
+            return "light";
+            break;
+        case "Lightningday":
+           return "lightning"
+            break;
+        case "Firesday":
+            return "fire"
+            break;
+        case "Watersday":
+            return "water"
+            break;
+        case "Windsday":
+            return "wind"
+            break;
+        case "Iceday":
+            return "ice"
+            break;
+        case "Earthsday":
+        return "earth"
+        break;
+        case "Darksday":
+            return "dark"
+            break;
+    }
 }
 
 
@@ -946,9 +993,9 @@ function dayTypeToLowerCaseWithoutEndingInsDays(value){
 value=value.toLowerCase();
     //console.log(value);
     if((value=="iceday")||(value=="lightningday")){
-        return value.slice(0,-3);
+        return titleCase(value.slice(0,-3));
     }else{
-        return value.slice(0,-4);
+        return titleCase(value.slice(0,-4));
     }
 }
 
